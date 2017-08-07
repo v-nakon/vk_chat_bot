@@ -1,15 +1,14 @@
+
 from flask import Flask, request, json
 import messageHandler
 from multiprocessing import Queue
 
 app = Flask(__name__)
+messageHandler.run_threads()
 
-# токен моего приложения
-secret_token = ''
 
 # токены моего сообщества
-token = ''
-confirmation_token = ''
+confirmation_token = 'ea065d90'
 
 queue = Queue()
 
@@ -18,10 +17,6 @@ queue = Queue()
 def hello_world():
     return 'chat_bot'
 
-#запуск потоков
-@app.before_first_request
-def start():
-    messageHandler.run_threads()
 
 @app.route('/', methods=['POST'])
 def processing():
