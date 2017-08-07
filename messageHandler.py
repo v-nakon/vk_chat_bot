@@ -4,6 +4,9 @@ import flask_app as fl
 import threading
 import time
 
+#список для токенов
+list_seckret_tokens = [""]
+token = ""
 
 list1 = ["держи", "лови", "бери", "забирай", "принимай", "зацени"]
 list2 = ["крутой", "классный", "отпадный", "прикольный", "смешной", "веселый"]
@@ -12,14 +15,14 @@ list4 = ["не то вводишь", "смотри ниже что нужно в
 
 
 #проверка очереди, ответ на запрос
-def get_queue(secret_token, number):
+def get_queue(secret_token):
     while True:
         if fl.queue.empty() == False:
             data = fl.queue.get_nowait()
-            print("Get DATA, THREAD - [%s]" % (number))
-            create_answer(data['object'], fl.token, secret_token)
+            print("Get DATA")
+            create_answer(data['object'], token, secret_token)
         else:
-            print("Queue is empty, THREAD - [%s]" % (number))
+            print("Queue is empty")
             time.sleep(2)
 
 
@@ -27,11 +30,11 @@ def get_queue(secret_token, number):
 
 #запуск потоков
 def run_threads():
-    thread1 = threading.Thread(target = get_queue, args = (fl.secret_token, "first"))
-    thread2 = threading.Thread(target = get_queue, args = (fl.secret_token, "second"))
+    for s_token in list_seckret_tokens:
+        thread_ = threading.Thread(target = get_queue, args = (s_token))
+        thread_.start()
+        print("run thread")
 
-    thread1.start()
-    thread2.start()
 
 
 # рандомное слово
